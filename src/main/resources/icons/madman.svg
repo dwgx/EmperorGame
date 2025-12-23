@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <defs>
+        <linearGradient id="madC" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5a5a5a"/>
+            <stop offset="100%" stop-color="#2f2f2f"/>
+        </linearGradient>
+    </defs>
+
+    <rect width="64" height="64" rx="10" fill="#1b1b1b"/>
+
+    <circle cx="31" cy="21" r="7" fill="#cfa27c"/>
+
+    <!-- 眼睛 -->
+    <circle cx="29" cy="21" r="1.2" fill="#000"/>
+    <circle cx="35" cy="22" r="0.8" fill="#000"/>
+
+    <!-- 身体 -->
+    <rect x="26" y="28" width="13" height="22" rx="5"
+          fill="url(#madC)" transform="rotate(-3 32 40)"/>
+
+    <!-- 裂纹 -->
+    <path d="M30 34l4 4-3 5 5 5" stroke="#aaa" stroke-width="1.5" fill="none"/>
+
+    <!-- 手臂 -->
+    <rect x="16" y="28" width="5" height="22" rx="2.5" fill="#cfa27c"/>
+    <rect x="42" y="33" width="5" height="17" rx="2.5" fill="#cfa27c"/>
+
+    <ellipse cx="32" cy="56" rx="15" ry="4" fill="#000" opacity="0.3"/>
+</svg>

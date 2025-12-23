@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+
+    <defs>
+        <!-- 叛徒衣服 -->
+        <linearGradient id="traitorCoat" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4b2b2b"/>
+            <stop offset="100%" stop-color="#2a1515"/>
+        </linearGradient>
+
+        <!-- 匕首刀刃 -->
+        <linearGradient id="daggerBlade" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f4f4f4"/>
+            <stop offset="70%" stop-color="#c6c6c6"/>
+            <stop offset="100%" stop-color="#9a9a9a"/>
+        </linearGradient>
+
+        <!-- 匕首柄 -->
+        <linearGradient id="daggerHandle" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3b2323"/>
+            <stop offset="100%" stop-color="#1f1212"/>
+        </linearGradient>
+    </defs>
+
+    <!-- 背景 -->
+    <rect width="64" height="64" rx="10" fill="#141010"/>
+
+    <!-- 头 -->
+    <circle cx="32" cy="21" r="7" fill="#d8b08c"/>
+
+    <!-- 眼睛（阴） -->
+    <circle cx="30" cy="21" r="1" fill="#000"/>
+    <circle cx="35" cy="22" r="0.8" fill="#000"/>
+
+    <!-- ===== 背后匕首（高识别符号） ===== -->
+    <g transform="rotate(-35 42 40)">
+
+        <!-- 刀尖 + 刀刃（三角明确） -->
+        <path d="
+            M42 26
+            L47 36
+            L42 40
+            L37 36
+            Z"
+              fill="url(#daggerBlade)"/>
+
+        <!-- 中轴线（增强“刃感”） -->
+        <path d="M42 28 L42 38"
+              stroke="#ffffff"
+              stroke-width="0.6"
+              opacity="0.6"/>
+
+        <!-- 护手（T 型，强识别） -->
+        <rect x="35" y="40" width="14" height="2.5" rx="1.2"
+              fill="#555"/>
+
+        <!-- 刀柄（加粗） -->
+        <rect x="39" y="42.5" width="6" height="8" rx="2"
+              fill="url(#daggerHandle)"/>
+
+    </g>
+
+    <!-- 身体（模板不动） -->
+    <rect x="26" y="28" width="12" height="22" rx="5"
+          fill="url(#traitorCoat)"/>
+
+    <!-- 叛徒标记（裂痕） -->
+    <path d="M30 36l2 3-1 4 3 4"
+          stroke="#bbb"
+          stroke-width="1.2"
+          fill="none"/>
+
+    <!-- 手臂 -->
+    <rect x="19" y="31" width="5" height="18" rx="2.5" fill="#d8b08c"/>
+    <rect x="40" y="31" width="5" height="18" rx="2.5" fill="#d8b08c"/>
+
+    <!-- 阴影 -->
+    <ellipse cx="32" cy="56" rx="14" ry="4" fill="#000" opacity="0.3"/>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+
+    <defs>
+        <!-- 平民衣服：单一、低存在感颜色 -->
+        <linearGradient id="civilCoat" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#7a7a7a"/>
+            <stop offset="100%" stop-color="#5f5f5f"/>
+        </linearGradient>
+    </defs>
+
+    <!-- 背景 -->
+    <rect width="64" height="64" rx="10" fill="#1b1b1b"/>
+
+    <!-- 头 -->
+    <circle cx="32" cy="21" r="7" fill="#d8b08c"/>
+
+    <!-- 身体（无任何标记） -->
+    <rect x="26" y="28" width="12" height="22" rx="5"
+          fill="url(#civilCoat)"/>
+
+    <!-- 手臂 -->
+    <rect x="19" y="31" width="5" height="18" rx="2.5" fill="#d8b08c"/>
+    <rect x="40" y="31" width="5" height="18" rx="2.5" fill="#d8b08c"/>
+
+    <!-- 地面阴影 -->
+    <ellipse cx="32" cy="56" rx="14" ry="4" fill="#000" opacity="0.25"/>
+</svg>
