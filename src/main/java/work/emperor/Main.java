@@ -19,6 +19,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -926,6 +927,7 @@ public class Main {
         private static final ServerLogger HTTP_LOG = ServerLogger.get(StaticHttp.class);
         private static final int HTTP_RATE_LIMIT_WINDOW_MS = 60_000;
         private static final int HTTP_RATE_LIMIT_MAX = 60;
+        private static final int MAX_API_BODY_BYTES = 16_384;
         private static final Map<String, HttpRateLimiter> HTTP_RATE_LIMITS = new ConcurrentHashMap<>();
         private static final String DEFAULT_ALLOWED_ORIGINS = "http://localhost,http://127.0.0.1";
         static HttpServer start(int port) {
@@ -993,14 +995,20 @@ public class Main {
                 exchange.sendResponseHeaders(429, -1);
                 return;
             }
-            byte[] raw = exchange.getRequestBody().readAllBytes();
-            if (raw.length > 16_384) { // 简单防滥用?6KB以上直接拒绝
+            byte[] raw;
+            try {
+                raw = readRequestBodyLimited(exchange, MAX_API_BODY_BYTES);
+            } catch (PayloadTooLargeException ex) {
+                // 拒绝超大包体，避免 readAllBytes 带来的内存放大风险。
                 exchange.sendResponseHeaders(413, -1);
                 return;
             }
             Map<String, Object> req = Map.of();
             try {
-                req = GSON.fromJson(new String(raw, StandardCharsets.UTF_8), Map.class);
+                Map<String, Object> parsed = GSON.fromJson(new String(raw, StandardCharsets.UTF_8), Map.class);
+                if (parsed != null) {
+                    req = parsed;
+                }
             } catch (Exception ignored) {}
             String nickname = safeStr(req.get("nickname"));
             String password = safeStr(req.get("password"));
@@ -1027,12 +1035,32 @@ public class Main {
         }
 
         private static void writeJson(HttpExchange ex, ApiResult res) throws IOException {
-            byte[] out = GSON.toJson(res).getBytes();
+            byte[] out = GSON.toJson(res).getBytes(StandardCharsets.UTF_8);
             Headers headers = ex.getResponseHeaders();
             headers.set("Content-Type", "application/json; charset=utf-8");
             // 为避免前端跨域时 fetch 直接抛 400，统一用 200 返回业务状态
             ex.sendResponseHeaders(200, out.length);
             try (OutputStream os = ex.getResponseBody()) { os.write(out); }
+        }
+
+        private static byte[] readRequestBodyLimited(HttpExchange exchange, int maxBytes) throws IOException {
+            try (InputStream in = exchange.getRequestBody();
+                 ByteArrayOutputStream out = new ByteArrayOutputStream(Math.min(maxBytes, 4096))) {
+                byte[] buffer = new byte[4096];
+                int total = 0;
+                int n;
+                while ((n = in.read(buffer)) != -1) {
+                    total += n;
+                    if (total > maxBytes) {
+                        throw new PayloadTooLargeException();
+                    }
+                    out.write(buffer, 0, n);
+                }
+                return out.toByteArray();
+            }
+        }
+
+        private static final class PayloadTooLargeException extends IOException {
         }
 
         private static void addCorsHeaders(HttpExchange exchange) {
